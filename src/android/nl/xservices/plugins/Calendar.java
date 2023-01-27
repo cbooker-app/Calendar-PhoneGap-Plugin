@@ -585,7 +585,7 @@ public class Calendar extends CordovaPlugin {
                     argOptionsObject.optLong("recurrenceCount", -1),
                     getPossibleNullString("allday", argOptionsObject),
                     argOptionsObject.optInt("calendarId", 1),
-                    getPossibleNullString("url", argOptionsObject);
+                    getPossibleNullString("url", argOptionsObject),
                     getPossibleNullArray("attendees", argOptionsObject));
             if (createdEventID != null) {
               callback.success(createdEventID);
