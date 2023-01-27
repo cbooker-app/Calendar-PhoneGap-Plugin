@@ -550,6 +550,7 @@
   NSNumber* recurrenceIntervalAmount = [calOptions objectForKey:@"recurrenceInterval"];
   NSString* calendarName = [calOptions objectForKey:@"calendarName"];
   NSString* url = [calOptions objectForKey:@"url"];
+  NSArray* attendees = [calOptions objectForKey:@"attendees"];
 
   [self.commandDelegate runInBackground: ^{
     EKEvent *myEvent = [EKEvent eventWithEventStore: self.eventStore];
@@ -620,6 +621,18 @@
       [myEvent addAlarm:reminder];
     }
 
+    NSMutableArray *attendeesObjectsList = [NSMutableArray new];
+    if (attendees != (id)[NSNull null]) {
+      NSUInteger size = [attendees count];
+      for (int i = 0; i < size; i++) {
+        Class className = NSClassFromString(@"EKAttendee");
+        id attendee = [className new];
+        [attendee setValue:[NSString stringWithFormat:@"%@", [attendees objectAtIndex: i]] forKey:@"emailAddress"];
+        [attendeesObjectsList addObject:attendee];
+      }
+      [myEvent setValue:attendeesObjectsList forKey:@"attendees"];
+    }
+
     if (recurrence != (id)[NSNull null]) {
       EKRecurrenceRule *rule = [[EKRecurrenceRule alloc] initRecurrenceWithFrequency: [self toEKRecurrenceFrequency:recurrence]
                                                                             interval: recurrenceIntervalAmount.integerValue
@@ -662,6 +675,7 @@
   NSString* calendarName = [calOptions objectForKey:@"calendarName"];
   NSString* url = [calOptions objectForKey:@"url"];
   NSNumber* intervalAmount = [calOptions objectForKey:@"recurrenceInterval"];
+  NSArray* attendees = [calOptions objectForKey:@"attendees"];
 
   EKEvent *myEvent = [EKEvent eventWithEventStore: self.eventStore];
   if (url != (id)[NSNull null]) {
@@ -730,6 +744,18 @@
       [myEvent addAlarm:reminder];
     }
 
+    NSMutableArray *attendeesObjectsList = [NSMutableArray new];
+    if (attendees != (id)[NSNull null]) {
+      NSUInteger size = [attendees count];
+      for (int i = 0; i < size; i++) {
+        Class className = NSClassFromString(@"EKAttendee");
+        id attendee = [className new];
+        [attendee setValue:[NSString stringWithFormat:@"%@", [attendees objectAtIndex: i]] forKey:@"emailAddress"];
+        [attendeesObjectsList addObject:attendee];
+      }
+      [myEvent setValue:attendeesObjectsList forKey:@"attendees"];
+    }
+    
     if (recurrence != (id)[NSNull null]) {
       [self.commandDelegate runInBackground: ^{
         EKRecurrenceRule *rule = [[EKRecurrenceRule alloc] initRecurrenceWithFrequency: [self toEKRecurrenceFrequency:recurrence]
